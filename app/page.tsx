@@ -1,65 +1,223 @@
-import Image from "next/image";
+"use client"
 
+import { useState, useEffect , useMemo} from "react";
+import { Particles } from "@/components/ui/particles";
+import { ShineBorder } from "@/components/ui/shine-border";
 export default function Home() {
+  // ===== CODING ROUND END TIME =====
+  const CODING_HOURS = '06';
+  const CODING_MINUTES = '30';
+  const CODING_AM_PM = "PM";
+  const CODING_MONTH = 10;
+  const CODING_DAY = 28;
+  const CODING_YEAR = 2025;
+  
+  // ===== MENTORING ROUND START TIME =====
+  const MENTORING_HOURS = '07';
+  const MENTORING_MINUTES = '00';
+  const MENTORING_AM_PM = "PM";
+  const MENTORING_MONTH = 10;
+  const MENTORING_DAY = 28;
+  const MENTORING_YEAR = 2025;
+  
+  // ===== TOGGLE NOTES SECTION =====
+  const showNotes = true; // Set to false to hide notes and center timers
+  // ===================================
+  
+  // const codingEndTime = new Date(
+  //   CODING_YEAR,
+  //   CODING_MONTH - 1,
+  //   CODING_DAY,
+  //   CODING_AM_PM === "PM" && CODING_HOURS !== 12 ? CODING_HOURS + 12 : CODING_AM_PM === "AM" && CODING_HOURS === 12 ? 0 : CODING_HOURS,
+  //   CODING_MINUTES,
+  //   0
+  // ).getTime();
+  
+  // const mentoringStartTime = new Date(
+  //   MENTORING_YEAR,
+  //   MENTORING_MONTH - 1,
+  //   MENTORING_DAY,
+  //   MENTORING_AM_PM === "PM" && MENTORING_HOURS !== 12 ? MENTORING_HOURS + 12 : MENTORING_AM_PM === "AM" && MENTORING_HOURS === 12 ? 0 : MENTORING_HOURS,
+  //   MENTORING_MINUTES,
+  //   0
+  // ).getTime();
+  const codingEndTime = new Date(
+    CODING_YEAR,
+    CODING_MONTH - 1,
+    CODING_DAY,
+    // Add the '+' operator before each variable
+    CODING_AM_PM === "PM" && +CODING_HOURS !== 12 ? +CODING_HOURS + 12 : CODING_AM_PM === "AM" && +CODING_HOURS === 12 ? 0 : +CODING_HOURS,
+    +CODING_MINUTES, // Also add here, just in case
+    0
+  ).getTime();
+  
+  const mentoringStartTime = new Date(
+    MENTORING_YEAR,
+    MENTORING_MONTH - 1,
+    MENTORING_DAY,
+    // Add the '+' operator before each variable
+    MENTORING_AM_PM === "PM" && +MENTORING_HOURS !== 12 ? +MENTORING_HOURS + 12 : MENTORING_AM_PM === "AM" && +MENTORING_HOURS === 12 ? 0 : +MENTORING_HOURS,
+    +MENTORING_MINUTES, // Also add here
+    0
+  ).getTime();
+  
+  const [codingTime, setCodingTime] = useState({ hours: 0, minutes: 0, seconds: 0, isExpired: false });
+  const [mentoringTime, setMentoringTime] = useState({ hours: 0, minutes: 0, seconds: 0, isExpired: false });
+  
+  // ===== NOTES CONFIGURATION =====
+  const notes = [
+    { id: 1, title: "SSID - 506-1", content: "Bruteforce@506-1" },
+    { id: 2, title: "SSID - 506-2", content: "Bruteforce@506-2" },
+  ];
+  // ==============================
+
+  useEffect(() => {
+    const calculateTimeLeft = (targetTime, setTime) => {
+      const now = new Date().getTime();
+      const difference = targetTime - now;
+
+      if (difference <= 0) {
+        setTime({ hours: 0, minutes: 0, seconds: 0, isExpired: true });
+        return;
+      }
+
+      const hours = Math.floor(difference / (1000 * 60 * 60));
+      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+      setTime({ hours, minutes, seconds, isExpired: false });
+    };
+
+    const updateTimers = () => {
+      calculateTimeLeft(codingEndTime, setCodingTime);
+      calculateTimeLeft(mentoringStartTime, setMentoringTime);
+    };
+
+    updateTimers();
+    const timer = setInterval(updateTimers, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatTime = (num) => String(num).padStart(2, '0');
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="relative flex min-h-screen items-center justify-center bg-black font-sans overflow-hidden">
+      <Particles 
+        className="absolute inset-0"
+        quantity={500}
+        staticity={50}
+        ease={50}
+        color="#ac9ef9"
+        refresh={true} 
+        vx={0.1}
+        vy={0.9} 
+      />
+      
+      <div className={`relative z-10 w-full h-screen p-8 flex items-center justify-center ${showNotes ? 'grid grid-cols-1 md:grid-cols-2 gap-4' : 'flex items-center justify-center'}`}>
+        {/* Timers Section */}
+        <div className="flex flex-col gap-4 justify-center">
+          {/* Top - Coding Round Timer */}
+          <div className="flex flex-col items-center justify-center">
+            <div className="text-2xl md:text-4xl font-bold text-white mb-4 text-center">
+              CODING ROUND ENDS IN
+            </div>
+            {codingTime.isExpired ? (
+              <div className="text-white text-4xl md:text-6xl font-bold">Time's Up!</div>
+            ) : (
+              <div>
+                <div className="flex items-center justify-center gap-2">
+                  <div className="text-6xl md:text-8xl font-bold text-[#ac9ef9] tabular-nums">
+                    {formatTime(codingTime.hours)}
+                  </div>
+                  <div className="text-6xl md:text-8xl font-bold text-[#ac9ef9]">:</div>
+                  <div className="text-6xl md:text-8xl font-bold text-[#ac9ef9] tabular-nums">
+                    {formatTime(codingTime.minutes)}
+                  </div>
+                  <div className="text-6xl md:text-8xl font-bold text-[#ac9ef9]">:</div>
+                  <div className="text-6xl md:text-8xl font-bold text-[#ac9ef9] tabular-nums">
+                    {formatTime(codingTime.seconds)}
+                  </div>
+                </div>
+                <div className="flex items-center justify-between gap-2 mt-2 px-2">
+                  <div className="text-gray-400 text-xs md:text-sm uppercase tracking-wider">
+                    HOURS
+                  </div>
+                  <div className="text-gray-400 text-xs md:text-sm uppercase tracking-wider">
+                    MINUTES
+                  </div>
+                  <div className="text-gray-400 text-xs md:text-sm uppercase tracking-wider">
+                    SECONDS
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+          
+          {/* Bottom - Mentoring Round Timer */}
+          <div className="flex flex-col items-center justify-center">
+            <div className="text-2xl md:text-4xl font-bold text-white mb-4 text-center mt-30">
+              MENTORING ROUND 1 STARTS IN
+            </div>
+            {mentoringTime.isExpired ? (
+              <div className="text-white text-4xl md:text-6xl font-bold">Started!</div>
+            ) : (
+              <div>
+                <div className="flex items-center justify-center gap-2">
+                  <div className="text-6xl md:text-8xl font-bold text-[#ac9ef9] tabular-nums">
+                    {formatTime(mentoringTime.hours)}
+                  </div>
+                  <div className="text-6xl md:text-8xl font-bold text-[#ac9ef9]">:</div>
+                  <div className="text-6xl md:text-8xl font-bold text-[#ac9ef9] tabular-nums">
+                    {formatTime(mentoringTime.minutes)}
+                  </div>
+                  <div className="text-6xl md:text-8xl font-bold text-[#ac9ef9]">:</div>
+                  <div className="text-6xl md:text-8xl font-bold text-[#ac9ef9] tabular-nums">
+                    {formatTime(mentoringTime.seconds)}
+                  </div>
+                </div>
+                <div className="flex items-center justify-between gap-2 mt-2 px-2">
+                  <div className="text-gray-400 text-xs md:text-sm uppercase tracking-wider">
+                    HOURS
+                  </div>
+                  <div className="text-gray-400 text-xs md:text-sm uppercase tracking-wider">
+                    MINUTES
+                  </div>
+                  <div className="text-gray-400 text-xs md:text-sm uppercase tracking-wider">
+                    SECONDS
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+        
+        {/* Right Column - Notes Section */}
+        {showNotes && (
+          <div className="flex flex-col justify-center items-center h-full">
+            <div className="text-2xl md:text-4xl font-bold text-white mb-6">
+              NOTES
+            </div>
+            <div className="flex flex-col gap-5">
+              {notes.map((note) => (
+                <div 
+                  key={note.id} 
+                  className="relative overflow-hidden bg-black/40 backdrop-blur-sm rounded-lg p-6 border border-gray-800 min-w-[280px]" // {/* <== ADD "overflow-hidden" HERE */}
+                >
+                 <ShineBorder
+                 />
+                  <h3 className="text-xl md:text-2xl font-bold text-[#ac9ef9] mb-3">
+                    {note.title}
+                  </h3>
+                  <p className="text-gray-300 text-base md:text-lg leading-relaxed">
+                    {note.content}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
