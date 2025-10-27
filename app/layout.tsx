@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Countdown Timers for Bruteforce Hackathon",
+  title: "Bruteforce Hackathon - 506",
   description: "Countdown Timers for Bruteforce - 506",
 };
 

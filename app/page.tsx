@@ -5,17 +5,17 @@ import { Particles } from "@/components/ui/particles";
 import { ShineBorder } from "@/components/ui/shine-border";
 export default function Home() {
   // ===== CODING ROUND END TIME =====
-  const CODING_HOURS = '06';
-  const CODING_MINUTES = '30';
-  const CODING_AM_PM = "PM";
+  const CODING_HOURS = 6; // Changed to number
+  const CODING_MINUTES = 30; // Changed to number
+  const CODING_AM_PM: "AM" | "PM" = "PM"; // Explicitly typed
   const CODING_MONTH = 10;
   const CODING_DAY = 28;
   const CODING_YEAR = 2025;
   
   // ===== MENTORING ROUND START TIME =====
-  const MENTORING_HOURS = '07';
-  const MENTORING_MINUTES = '00';
-  const MENTORING_AM_PM = "PM";
+  const MENTORING_HOURS = 7; // Changed to number
+  const MENTORING_MINUTES = 0; // Changed to number
+  const MENTORING_AM_PM: "AM" | "PM" = "PM"; // Explicitly typed
   const MENTORING_MONTH = 10;
   const MENTORING_DAY = 28;
   const MENTORING_YEAR = 2025;
@@ -24,42 +24,30 @@ export default function Home() {
   const showNotes = true; // Set to false to hide notes and center timers
   // ===================================
   
-  // const codingEndTime = new Date(
-  //   CODING_YEAR,
-  //   CODING_MONTH - 1,
-  //   CODING_DAY,
-  //   CODING_AM_PM === "PM" && CODING_HOURS !== 12 ? CODING_HOURS + 12 : CODING_AM_PM === "AM" && CODING_HOURS === 12 ? 0 : CODING_HOURS,
-  //   CODING_MINUTES,
-  //   0
-  // ).getTime();
-  
-  // const mentoringStartTime = new Date(
-  //   MENTORING_YEAR,
-  //   MENTORING_MONTH - 1,
-  //   MENTORING_DAY,
-  //   MENTORING_AM_PM === "PM" && MENTORING_HOURS !== 12 ? MENTORING_HOURS + 12 : MENTORING_AM_PM === "AM" && MENTORING_HOURS === 12 ? 0 : MENTORING_HOURS,
-  //   MENTORING_MINUTES,
-  //   0
-  // ).getTime();
+  const convertTo24HourFormat = (hours: number, period: "AM" | "PM"): number => {
+    if (period === "PM" && hours !== 12) return hours + 12;
+    if (period === "AM" && hours === 12) return 0;
+    return hours;
+  };
+
   const codingEndTime = new Date(
     CODING_YEAR,
     CODING_MONTH - 1,
     CODING_DAY,
-    // Add the '+' operator before each variable
-    CODING_AM_PM === "PM" && +CODING_HOURS !== 12 ? +CODING_HOURS + 12 : CODING_AM_PM === "AM" && +CODING_HOURS === 12 ? 0 : +CODING_HOURS,
-    +CODING_MINUTES, // Also add here, just in case
+    convertTo24HourFormat(+CODING_HOURS, CODING_AM_PM),
+    +CODING_MINUTES,
     0
   ).getTime();
-  
+
   const mentoringStartTime = new Date(
     MENTORING_YEAR,
     MENTORING_MONTH - 1,
     MENTORING_DAY,
-    // Add the '+' operator before each variable
-    MENTORING_AM_PM === "PM" && +MENTORING_HOURS !== 12 ? +MENTORING_HOURS + 12 : MENTORING_AM_PM === "AM" && +MENTORING_HOURS === 12 ? 0 : +MENTORING_HOURS,
-    +MENTORING_MINUTES, // Also add here
+    convertTo24HourFormat(+MENTORING_HOURS, MENTORING_AM_PM),
+    +MENTORING_MINUTES,
     0
   ).getTime();
+  
   
   const [codingTime, setCodingTime] = useState({ hours: 0, minutes: 0, seconds: 0, isExpired: false });
   const [mentoringTime, setMentoringTime] = useState({ hours: 0, minutes: 0, seconds: 0, isExpired: false });
@@ -72,7 +60,7 @@ export default function Home() {
   // ==============================
 
   useEffect(() => {
-    const calculateTimeLeft = (targetTime, setTime) => {
+    const calculateTimeLeft = (targetTime: number, setTime: (time: { hours: number; minutes: number; seconds: number; isExpired: boolean }) => void) => {
       const now = new Date().getTime();
       const difference = targetTime - now;
 
@@ -99,7 +87,7 @@ export default function Home() {
     return () => clearInterval(timer);
   }, []);
 
-  const formatTime = (num) => String(num).padStart(2, '0');
+  const formatTime = (num: number) => String(num).padStart(2, '0');
 
   return (
     <div className="relative flex min-h-screen items-center justify-center bg-black font-sans overflow-hidden">
