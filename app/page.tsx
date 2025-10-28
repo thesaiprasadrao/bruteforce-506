@@ -14,7 +14,7 @@ export default function Home() {
   
   // ===== MENTORING ROUND START TIME =====
   const MENTORING_HOURS = 3; // Changed to number
-  const MENTORING_MINUTES = 30; // Changed to number
+  const MENTORING_MINUTES = 0; // Changed to number
   const MENTORING_AM_PM: "AM" | "PM" = "PM"; // Explicitly typed
   const MENTORING_MONTH = 10;
   const MENTORING_DAY = 28;
